@@ -1,48 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paws & Palms | Professional Pet Care</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <nav>
-        <div class="logo">Paws & Palms</div>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+*document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const formData = {
+    name: this.querySelector('input[placeholder="Your Name"]').value,
+    email: this.querySelector('input[placeholder="Your Email"]').value,
+    message: this.querySelector('textarea').value
+  };
 
-    <header id="home">
-        <h1>Quality Care for Your Best Friends</h1>
-        <p>Reliable grooming, walking, and sitting services.</p>
-        <button>Book a Visit</button>
-    </header>
+  try {
+    const response = await fetch('http://localhost:5000/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
 
-    <section id="services">
-        <h2>Our Services</h2>
-        <div class="service-grid">
-            <div class="card">
-                <h3>Dog Walking</h3>
-                <p>Energetic 30 or 60-minute walks in your neighborhood.</p>
-            </div>
-            <div class="card">
-                <h3>Pet Sitting</h3>
-                <p>Overnight stays so your pets feel safe at home.</p>
-            </div>
-            <div class="card">
-                <h3>Grooming</h3>
-                <p>Full baths, nail trimming, and haircuts.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer id="contact">
-        <p>Contact us: hello@petcare.com | 555-0123</p>
-        <p>&copy; 2026 Pet Care Services</p>
-    </footer>
-</body>
-</html>
+    const result = await response.json();
+    
+    if (result.success) {
+      alert('✅ Thank you! Your message has been saved to Firebase 🐾');
+      this.reset();
+    } else {
+      alert('❌ ' + result.error);
+    }
+  } catch (err) {
+    alert('❌ Backend not running. Start the server first!');
+  }
+});
